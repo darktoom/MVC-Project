@@ -19,13 +19,13 @@ namespace Company.Repository.Repository
         public void add(T entity)
        {  _context.Set<T>().Add(entity); 
         
-        _context.SaveChanges();
+       
         }
 
         public void delete(T entity)
         { _context.Set<T>().Remove(entity); 
         
-        _context.SaveChanges();
+     
         
         }
 
@@ -39,8 +39,7 @@ namespace Company.Repository.Repository
         {
             _context.Set<T>().Update(entity);
 
-            _context.SaveChanges();
-
+          
         }
     }
 }

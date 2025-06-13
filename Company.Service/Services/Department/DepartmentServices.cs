@@ -1,7 +1,7 @@
 ﻿using Company.Data.Entities;
 using Company.Repository.Interfaces;
 using Company.Service.Interfaces;
-
+using Company.Service.Interfaces.Department.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,35 +12,38 @@ namespace Company.Service.Services
 {
     public class DepartmentServices : IDepartmentService
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentServices(IDepartmentRepository departmentRepository) 
+        public DepartmentServices(IUnitOfWork unitOfWork) 
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public void add(Department department)
+        public void add(DepartmentDto department)
         {
-            var mappedDepartment = new Department
+            var mappedDepartment = new DepartmentDto
             {
-                Code =department.Code,
+                Code = department.Code,
                 Name = department.Name,
-                CeateAt=department.CeateAt
+                CreateAt = department.CreateAt
             };
 
-            _departmentRepository.add(mappedDepartment);
+            _unitOfWork.DepartmentRepository.add(mappedDepartment);
 
+            _unitOfWork.Complete();
         }
 
-        public void delete(Department entity)
+        public void delete(DepartmentDto entity)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Department> GetAll()
+        public IEnumerable<DepartmentDto> GetAll()
         {
-           var departments = _departmentRepository.GetAll();
+           var departments =_unitOfWork.DepartmentRepository.GetAll();
             return departments;
+
+           
         }
 
         public Department GetById(int? id)
@@ -49,7 +52,7 @@ namespace Company.Service.Services
 
                 throw new Exception("id is null");
             }
-            var department = _departmentRepository.GetById(id.Value);
+            var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
 
             if (department == null) {
                 return null;
@@ -61,8 +64,9 @@ namespace Company.Service.Services
         public void update(Department department)
         {
            
-            _departmentRepository.update(department);
+           _unitOfWork.DepartmentRepository.update(department);
 
+            _unitOfWork.Complete();
         }
     }
 }
